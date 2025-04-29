@@ -1,0 +1,177 @@
+/* Container général */
+.materiel-list-container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f8ff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(173, 216, 230, 0.4);
+}
+
+/* En-tête de la liste */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.list-header h2 {
+    color: #007acc;
+    font-size: 28px;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Bouton Ajouter */
+.add-btn {
+    background-color: #00bfff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+    background-color: #009acd;
+}
+
+/* Barre de recherche */
+.search-bar {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #b0c4de;
+    border-radius: 6px;
+    font-size: 14px;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.search-bar i {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #4682b4;
+}
+
+/* Table des matériels */
+.materiel-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.materiel-table thead {
+    background-color: #b0e0e6;
+}
+
+.materiel-table th,
+.materiel-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.materiel-table th {
+    font-weight: 600;
+    color: #004c70;
+}
+
+.materiel-table tbody tr {
+    border-bottom: 1px solid #e6f2f5;
+    transition: background-color 0.2s ease;
+}
+
+.materiel-table tbody tr:nth-child(even) {
+    background-color: #f9fdff;
+}
+
+.materiel-table tbody tr:hover {
+    background-color: #e0f7ff;
+}
+
+/* Boutons d'action */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn {
+    background-color: #007acc;
+}
+
+.edit-btn:hover {
+    background-color: #005f99;
+}
+
+.delete-btn {
+    background-color: #ff6b6b;
+}
+
+.delete-btn:hover {
+    background-color: #e63946;
+}
+
+/* Aucun résultat trouvé */
+.no-results {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+    font-size: 16px;
+    background-color: #eaf4fb;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+
+/* Chargement et erreurs */
+.loading,
+.error {
+    text-align: center;
+    font-size: 18px;
+    padding: 20px;
+    color: #004c70;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .add-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .materiel-table {
+        display: block;
+        overflow-x: auto;
+    }
+}

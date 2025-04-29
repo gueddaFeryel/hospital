@@ -1,0 +1,450 @@
+/* Gestion des salles css/MaterielList.css */
+
+.materiel-list-container {
+    max-width: 1600px;
+    margin: 3rem auto;
+    padding: 0 3rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #f9f9ff 0%, #f0f4ff 100%);
+    min-height: 100vh;
+}
+
+/* En-tête avec effet verre */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.list-header h2 {
+    color: #2a2d7c;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #6e45e2 0%, #89d4cf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Boutons avec effet néon */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #6e45e2, #89d4cf, #6e45e2);
+    background-size: 200% 200%;
+    z-index: -1;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.add-btn {
+    background: #6e45e2;
+    color: white;
+    box-shadow: 0 4px 20px rgba(110, 69, 226, 0.3);
+}
+
+.add-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(110, 69, 226, 0.4);
+}
+
+.add-btn:hover::before {
+    opacity: 1;
+    animation: gradientBG 3s ease infinite;
+}
+
+.btn-back {
+    background: white;
+    color: #6e45e2;
+    border: 2px solid #e0e7ff;
+    margin-right: 1rem;
+}
+
+.btn-back:hover {
+    background: #f8faff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(110, 69, 226, 0.15);
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Barre de recherche futuriste */
+.search-container {
+    margin-bottom: 3rem;
+    position: relative;
+    max-width: 600px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 1.1rem 1.5rem 1.1rem 4rem;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.05rem;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s;
+    color: #333;
+}
+
+.search-bar:focus {
+    outline: none;
+    box-shadow: 0 5px 25px rgba(110, 69, 226, 0.2);
+    transform: scale(1.02);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6e45e2;
+    font-size: 1.2rem;
+}
+
+/* Tableau holographique */
+.table-wrapper {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.table-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #6e45e2, #89d4cf, #6e45e2);
+    background-size: 200% 200%;
+    z-index: -1;
+    border-radius: 22px;
+    animation: gradientBG 6s ease infinite;
+    opacity: 0.7;
+}
+
+.materiel-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.materiel-table thead tr {
+    background: linear-gradient(90deg, #6e45e2 0%, #89d4cf 100%);
+}
+
+.materiel-table th {
+    padding: 1.5rem 2rem;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.materiel-table th:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    height: 50%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.materiel-table tbody tr {
+    transition: all 0.3s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.materiel-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.materiel-table tbody tr:hover {
+    background: rgba(110, 69, 226, 0.03);
+    transform: translateX(5px);
+}
+
+.materiel-table td {
+    padding: 1.5rem 2rem;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+}
+
+.materiel-table td::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, #6e45e2, #89d4cf);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.materiel-table tbody tr:hover td::before {
+    opacity: 1;
+}
+
+/* Actions avec effet 3D */
+.actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.action-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: translateX(-100%);
+    transition: 0.4s;
+}
+
+.action-btn:hover::after {
+    transform: translateX(100%);
+}
+
+.edit-btn {
+    color: #6e45e2;
+    border: 1px solid #e0d6ff;
+}
+
+.edit-btn:hover {
+    background: #f3efff;
+    transform: translateY(-3px) rotate(5deg);
+    box-shadow: 0 6px 15px rgba(110, 69, 226, 0.2);
+}
+
+.delete-btn {
+    color: #ff4757;
+    border: 1px solid #ffd6da;
+}
+
+.delete-btn:hover {
+    background: #fff0f1;
+    transform: translateY(-3px) rotate(-5deg);
+    box-shadow: 0 6px 15px rgba(255, 71, 87, 0.2);
+}
+
+/* Animation pour les lignes */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.materiel-table tbody tr {
+    animation: fadeIn 0.5s ease forwards;
+    opacity: 0;
+}
+
+.materiel-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.materiel-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.materiel-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+/* ... ajoutez plus de délais si nécessaire */
+
+/* Message aucun résultat */
+.no-results {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    margin-top: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.no-results::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(110, 69, 226, 0.03)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+    background-size: cover;
+    z-index: -1;
+}
+
+.no-results p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #6e45e2;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .materiel-list-container {
+        padding: 0 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .materiel-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .materiel-table th,
+    .materiel-table td {
+        padding: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .materiel-list-container {
+        padding: 0 1.5rem;
+    }
+
+    .search-bar {
+        padding: 1rem 1rem 1rem 3.5rem;
+    }
+
+    .search-icon {
+        left: 1.2rem;
+    }
+}
+/* Barre de recherche améliorée */
+.search-container {
+    position: relative;
+    margin: 2rem 0;
+    width: 100%;
+    max-width: 600px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 1rem 1.5rem 1rem 3.5rem;
+    font-size: 1rem;
+    border: 2px solid #e0e3ff;
+    border-radius: 50px;
+    background-color: #f8f9ff;
+    color: #4a4a4a;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 2px 10px rgba(74, 106, 255, 0.05);
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: #6e45e2;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(110, 69, 226, 0.1);
+    transform: translateY(-1px);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6e45e2;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.search-bar:focus + .search-icon {
+    color: #4a6aff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Animation lorsque la barre est active */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(110, 69, 226, 0.2); }
+    100% { box-shadow: 0 0 0 12px rgba(110, 69, 226, 0); }
+}
+
+.search-bar:focus {
+    animation: pulse 1.5s infinite;
+}
+
+/* Version sombre pour thème dark */
+.dark-mode .search-bar {
+    background-color: #2a2a3c;
+    border-color: #3d3d5a;
+    color: #f0f0f0;
+}
+
+.dark-mode .search-bar:focus {
+    background-color: #1e1e2d;
+    border-color: #6e45e2;
+}

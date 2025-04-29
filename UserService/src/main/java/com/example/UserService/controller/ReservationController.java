@@ -1,0 +1,85 @@
+package com.example.UserService.controller;
+
+import com.example.UserService.model.Reservation;
+import com.example.UserService.service.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+@CrossOrigin(origins = "http://localhost:3000")
+@RestController
+@RequestMapping("/api/reservations")
+public class ReservationController {
+
+    @Autowired
+    private ReservationService reservationService;
+
+    @PostMapping("/{roomName}")
+    public ResponseEntity<Reservation> createReservation(
+            @PathVariable String roomName,
+            @RequestBody Reservation reservation) {
+        try {
+            Reservation createdReservation = reservationService.createReservation(roomName, reservation);
+            return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+    // Récupérer toutes les réservations
+    @GetMapping
+    public List<Reservation> getAllReservations() {
+        return reservationService.getAllReservations();
+    }
+
+    // Ajoutez ce endpoint
+    @DeleteMapping("/by-room/{roomId}")
+    public ResponseEntity<Void> deleteReservationsByRoom(@PathVariable Long roomId) {
+        reservationService.deleteByOperatingRoomId(roomId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Ajoutez cette méthode dans votre contrôleur
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
+        try {
+            Reservation reservation = reservationService.getReservationById(id);
+            return ResponseEntity.ok(reservation);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Erreur lors de la récupération de la réservation",
+                    e
+            );
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateReservation(
+            @PathVariable Long id,
+            @RequestBody Reservation reservationDetails) {
+        try {
+            Reservation updatedReservation = reservationService.updateReservation(id, reservationDetails);
+            return ResponseEntity.ok(updatedReservation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", e.getMessage(),
+                    "timestamp", LocalDateTime.now()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "error", "Erreur interne du serveur",
+                    "timestamp", LocalDateTime.now()
+            ));
+        }
+    }
+
+}
