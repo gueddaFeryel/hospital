@@ -1,0 +1,719 @@
+/* Calendar.css */
+
+.intervention-container {
+    max-width: 1600px;
+    margin: 3rem auto;
+    padding: 0 3rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #f9f9ff 0%, #f0f4ff 100%);
+    min-height: 100vh;
+}
+
+/* En-tête avec effet verre */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.header {
+    color: #2a2d7c;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #6e45e2 0%, #89d4cf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Boutons avec effet néon */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #6e45e2, #89d4cf, #6e45e2);
+    background-size: 200% 200%;
+    z-index: -1;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.btn-add {
+    background: #6e45e2;
+    color: white;
+    box-shadow: 0 4px 20px rgba(110, 69, 226, 0.3);
+}
+
+.btn-add:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(110, 69, 226, 0.4);
+}
+
+.btn-add:hover::before {
+    opacity: 1;
+    animation: gradientBG 3s ease infinite;
+}
+
+.btn-back {
+    background: white;
+    color: #6e45e2;
+    border: 2px solid #e0e7ff;
+    margin-right: 1rem;
+}
+
+.btn-back:hover {
+    background: #f8faff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(110, 69, 226, 0.15);
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Contrôles du calendrier */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.month-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2a2d7c;
+    min-width: 200px;
+    text-align: center;
+}
+
+.nav-button {
+    background: #6e45e2;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(110, 69, 226, 0.3);
+}
+
+.nav-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(110, 69, 226, 0.4);
+}
+
+/* Grille du calendrier */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    margin-bottom: 3rem;
+}
+
+.calendar-day-header {
+    text-align: center;
+    padding: 1rem;
+    font-weight: 600;
+    color: #6e45e2;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-day {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 1rem;
+    min-height: 120px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.calendar-day:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(110, 69, 226, 0.15);
+}
+
+.other-month {
+    background: rgba(255, 255, 255, 0.5);
+    color: #aaa;
+}
+
+.selected-day {
+    background: rgba(110, 69, 226, 0.1);
+    border: 1px solid rgba(110, 69, 226, 0.3);
+}
+
+.today-day {
+    background: rgba(137, 212, 207, 0.15);
+    border: 1px solid rgba(137, 212, 207, 0.3);
+}
+
+.day-number {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #2a2d7c;
+}
+
+.today-marker {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #6e45e2;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.intervention-indicator {
+    font-size: 0.8rem;
+    background: linear-gradient(45deg, #6e45e2, #89d4cf);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Interventions du jour */
+.today-interventions {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.today-interventions h3 {
+    font-size: 1.5rem;
+    color: #2a2d7c;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.today-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.today-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+    border-left: 4px solid #6e45e2;
+    position: relative;
+    overflow: hidden;
+}
+
+.today-card.upcoming {
+    border-left-color: #f39c12;
+}
+
+.today-card.in-progress {
+    border-left-color: #2ecc71;
+}
+
+.today-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(110, 69, 226, 0.15);
+}
+
+.today-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.intervention-time {
+    font-weight: 600;
+    color: #6e45e2;
+    font-size: 1.1rem;
+}
+
+.today-card.upcoming .intervention-time {
+    color: #f39c12;
+}
+
+.today-card.in-progress .intervention-time {
+    color: #2ecc71;
+}
+
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-planifiee {
+    background: rgba(110, 69, 226, 0.1);
+    color: #6e45e2;
+}
+
+.status-en_cours {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    animation: pulse 2s infinite;
+}
+
+.status-terminee {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+}
+
+.status-annulee {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.today-card-body h4 {
+    margin: 0 0 0.5rem 0;
+    color: #2a2d7c;
+    font-size: 1.2rem;
+}
+
+.today-card-body p {
+    margin: 0 0 1rem 0;
+    color: #666;
+}
+
+.time-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(240, 240, 240, 0.5);
+}
+
+.today-card-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-action {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.details-btn {
+    background: rgba(110, 69, 226, 0.1);
+    color: #6e45e2;
+}
+
+.details-btn:hover {
+    background: rgba(110, 69, 226, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Liste des interventions */
+.interventions-list {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.interventions-list h3 {
+    font-size: 1.5rem;
+    color: #2a2d7c;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.intervention-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.intervention-table thead tr {
+    background: linear-gradient(90deg, #6e45e2 0%, #89d4cf 100%);
+}
+
+.intervention-table th {
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.intervention-table th:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    height: 50%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.intervention-table tbody tr {
+    transition: all 0.3s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.intervention-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.intervention-table tbody tr:hover {
+    background: rgba(110, 69, 226, 0.03);
+    transform: translateX(5px);
+}
+
+.intervention-table td {
+    padding: 1.2rem 1.5rem;
+    color: #333;
+    font-weight: 500;
+    position: relative;
+}
+
+.intervention-table td::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, #6e45e2, #89d4cf);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.intervention-table tbody tr:hover td::before {
+    opacity: 1;
+}
+
+.type-cell {
+    text-transform: capitalize;
+}
+
+.room-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.room-name {
+    font-weight: 500;
+}
+
+.no-room {
+    color: #9e9e9e;
+    font-style: italic;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.edit-btn {
+    background: rgba(74, 144, 226, 0.1);
+    color: #4a90e2;
+}
+
+.edit-btn:hover {
+    background: rgba(74, 144, 226, 0.2);
+    transform: translateY(-2px);
+}
+
+.cancel-btn {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.cancel-btn:hover {
+    background: rgba(231, 76, 60, 0.2);
+    transform: translateY(-2px);
+}
+
+.details-btn {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+}
+
+.details-btn:hover {
+    background: rgba(39, 174, 96, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Barre de recherche */
+.search-container {
+    position: relative;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 1.5rem 1rem 3.5rem;
+    border: 2px solid #e0e3ff;
+    border-radius: 50px;
+    font-size: 1rem;
+    background-color: #f8f9ff;
+    color: #4a4a4a;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 2px 10px rgba(74, 106, 255, 0.05);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6e45e2;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(110, 69, 226, 0.1);
+    transform: translateY(-1px);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6e45e2;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.search-input:focus + .search-icon {
+    color: #4a6aff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Animation pulse */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(110, 69, 226, 0.2); }
+    100% { box-shadow: 0 0 0 12px rgba(110, 69, 226, 0); }
+}
+
+.search-input:focus {
+    animation: pulse 1.5s infinite;
+}
+
+/* États */
+.no-interventions {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.no-interventions::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(110, 69, 226, 0.03)" d="M0,0 L100,0 L100,100 L0,100 Z"></path></svg>');
+    background-size: cover;
+    z-index: -1;
+}
+
+.no-interventions p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #6e45e2;
+    font-weight: 500;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+}
+
+.spinner {
+    border: 4px solid rgba(110, 69, 226, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #6e45e2;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+}
+
+.error {
+    color: #e74c3c;
+    padding: 2rem;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 15px;
+    text-align: center;
+    margin: 2rem 0;
+    font-weight: 500;
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .intervention-container {
+        padding: 0 2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .today-cards {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-container {
+        max-width: 100%;
+    }
+
+    .calendar-grid {
+        gap: 8px;
+    }
+
+    .calendar-day {
+        min-height: 100px;
+        padding: 0.8rem;
+    }
+
+    .intervention-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .intervention-container {
+        padding: 0 1.5rem;
+    }
+
+    .calendar-day {
+        min-height: 80px;
+    }
+
+    .day-number {
+        font-size: 1rem;
+    }
+
+    .intervention-indicator {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+}

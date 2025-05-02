@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './auth/AuthContext'; // import useAuth!
+import { AuthProvider, useAuth } from './auth/AuthContext';
 import Login from './auth/Login';
 import SignUp from './auth/SignUp';
 
-// Partie ADMIN
+// Admin Components
 import AdminDashboard from "./auth/AdminDashboard";
 import InterventionList from "./admin/Gestion des interventions/InterventionList";
 import InterventionForm from "./admin/Gestion des interventions/InterventionForm";
@@ -17,29 +17,29 @@ import CreateRoomForm from "./admin/Gestion des salles/CreateRoomForm";
 import EditRoomModal from "./admin/Gestion des salles/EditRoomModal";
 import MaterielList from "./admin/MaterielList";
 import CreateMaterielForm from "./admin/CreateMaterielForm";
+import InterventionCalendar from "./admin/Gestion des interventions/InterventionCalendar";
 
-// 👉 Import USER components too
+// User Components
 import UserHome from './user/UserHome';
 import UserCalendarView from './user/UserCalendarView';
 import UserInterventionDetails from './user/UserInterventionDetails';
+import DoctorInterventionRequest from "./user/DoctorInterventionRequest";
 
 function AppRoutes() {
-    const { currentUser, userData, loading } = useAuth(); // 👈 récupérer les données de l'utilisateur
+    const { currentUser, userData, loading } = useAuth();
 
     if (loading) {
-        return <div>Loading...</div>; // Loading spinner
+        return <div className="loading-spinner">Loading...</div>;
     }
-
-    console.log("User data:", userData); // Log to check userData and currentUser
 
     return (
         <Routes>
-            {/* Route pour la racine */}
+            {/* Public Routes */}
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
 
-            {/* Partie ADMIN */}
+            {/* Admin Routes */}
             {currentUser && userData?.role === 'admin' && (
                 <>
                     <Route path="/dashboard" element={<AdminDashboard />} />
@@ -59,18 +59,22 @@ function AppRoutes() {
                     <Route path="/materiels" element={<MaterielList />} />
                     <Route path="/materiels/edit/:id" element={<CreateMaterielForm editMode={true} />} />
                     <Route path="/materiels/new" element={<CreateMaterielForm />} />
+                    <Route path="/InterventionCalendar" element={<InterventionCalendar />} />
                 </>
             )}
 
-            {/* Partie USER */}
+            {/* Doctor Routes */}
             {currentUser && userData?.role === 'MEDECIN' && (
                 <>
                     <Route path="/home" element={<UserHome />} />
                     <Route path="/calendar" element={<UserCalendarView />} />
                     <Route path="/intervention/:id" element={<UserInterventionDetails />} />
+                    <Route path="/request-intervention" element={<DoctorInterventionRequest />} /> />
+                    <Route path="/mes-interventions" element={<InterventionList />} />
                 </>
             )}
 
+            {/* Nurse Routes */}
             {currentUser && userData?.role === 'INFIRMIER' && (
                 <>
                     <Route path="/home" element={<UserHome />} />
@@ -79,6 +83,7 @@ function AppRoutes() {
                 </>
             )}
 
+            {/* Anesthetist Routes */}
             {currentUser && userData?.role === 'ANESTHESISTE' && (
                 <>
                     <Route path="/home" element={<UserHome />} />
@@ -87,12 +92,19 @@ function AppRoutes() {
                 </>
             )}
 
-            {/* Redirection par défaut */}
-            <Route path="*" element={<Navigate to={currentUser ? (userData?.role === 'admin' ? "/dashboard" : "/home") : "/login"} replace />} />
+            {/* Default Redirect */}
+            <Route path="*" element={
+                <Navigate to={
+                    currentUser
+                        ? (userData?.role === 'admin'
+                            ? "/dashboard"
+                            : "/home")
+                        : "/login"
+                } replace />
+            } />
         </Routes>
     );
 }
-
 
 function App() {
     return (
@@ -103,4 +115,3 @@ function App() {
 }
 
 export default App;
-
