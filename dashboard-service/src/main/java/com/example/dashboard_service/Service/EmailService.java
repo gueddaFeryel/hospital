@@ -1,6 +1,4 @@
 package com.example.dashboard_service.Service;
-
-
 import com.example.dashboard_service.Repository.InterventionRepository;
 import com.example.dashboard_service.model.InterventionChirurgicale;
 import com.example.dashboard_service.model.MedicalStaff;
@@ -22,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 @Service
 public class EmailService {
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);

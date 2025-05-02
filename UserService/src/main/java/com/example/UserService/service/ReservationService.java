@@ -1,5 +1,4 @@
 package com.example.UserService.service;
-
 import com.example.UserService.model.OperatingRoom;
 import com.example.UserService.model.Reservation;
 import com.example.UserService.repository.OperatingRoomRepository;
@@ -7,13 +6,10 @@ import com.example.UserService.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Service
 public class ReservationService {
-
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired
@@ -118,6 +114,16 @@ public class ReservationService {
             throw new RuntimeException("Erreur lors de la mise à jour de la réservation", e);
         }
     }
+    public void deleteReservation(Long id) {
+        // Check if reservation exists
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found with id: " + id));
+
+        // Delete the reservation
+        reservationRepository.delete(reservation);
+    }
+
+    // ... rest of your service methods ...
 
 }
 
