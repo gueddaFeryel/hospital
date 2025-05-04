@@ -5,29 +5,44 @@ import { format, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { toast } from 'react-toastify';
 import '../Gestion des interventions css/InterventionList.css';
+
 const InterventionList = () => {
     const [interventions, setInterventions] = useState([]);
     const [filteredInterventions, setFilteredInterventions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+
+    // États pour les modals
     const [showRoomModal, setShowRoomModal] = useState(false);
     const [showStaffModal, setShowStaffModal] = useState(false);
+    const [showMaterialModal, setShowMaterialModal] = useState(false);
+
     const [currentIntervention, setCurrentIntervention] = useState(null);
+
+    // États pour les salles
     const [availableRooms, setAvailableRooms] = useState([]);
+    const [selectedRoom, setSelectedRoom] = useState('');
+    const [roomLoading, setRoomLoading] = useState(false);
+
+    // États pour le staff
     const [availableStaff, setAvailableStaff] = useState({
         MEDECIN: [],
         ANESTHESISTE: [],
         INFIRMIER: []
     });
-    const [selectedRoom, setSelectedRoom] = useState('');
     const [selectedStaff, setSelectedStaff] = useState({
         MEDECIN: null,
         ANESTHESISTE: null,
         INFIRMIER: null
     });
-    const [roomLoading, setRoomLoading] = useState(false);
     const [staffLoading, setStaffLoading] = useState(false);
+
+    // États pour les matériels
+    const [availableMaterials, setAvailableMaterials] = useState([]);
+    const [selectedMaterials, setSelectedMaterials] = useState([]);
+    const [materialLoading, setMaterialLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const ROLES = {
@@ -53,13 +68,17 @@ const InterventionList = () => {
                 const staffNames = intervention.equipeMedicale?.map(staff =>
                     `${staff.nom || ''} ${staff.prenom || ''}`.toLowerCase()
                 ).join(' ') || '';
+                const materialNames = intervention.materiels?.map(m =>
+                    m.nom.toLowerCase()
+                ).join(' ') || '';
 
                 return (
                     dateFormatted.includes(searchLower) ||
                     typeFormatted.includes(searchLower) ||
                     statusFormatted.includes(searchLower) ||
                     roomNameFormatted.includes(searchLower) ||
-                    staffNames.includes(searchLower)
+                    staffNames.includes(searchLower) ||
+                    materialNames.includes(searchLower)
                 );
             } catch (e) {
                 console.error("Erreur de filtrage:", e);
@@ -80,7 +99,7 @@ const InterventionList = () => {
             for (const intervention of interventionsData.slice(0, 50)) {
                 if (!intervention?.id) continue;
 
-                const [roomData, staffData] = await Promise.all([
+                const [roomData, staffData, materialsData] = await Promise.all([
                     intervention.roomId ?
                         axios.get(`http://localhost:8086/api/rooms/${intervention.roomId}`)
                             .then(res => res.data)
@@ -93,6 +112,10 @@ const InterventionList = () => {
 
                     axios.get(`http://localhost:8089/api/interventions/${intervention.id}/staff`)
                         .then(res => Array.isArray(res.data) ? res.data : [])
+                        .catch(() => []),
+
+                    axios.get(`http://localhost:8089/api/interventions/${intervention.id}/materiels`)
+                        .then(res => Array.isArray(res.data) ? res.data : [])
                         .catch(() => [])
                 ]);
 
@@ -100,12 +123,18 @@ const InterventionList = () => {
                     ...intervention,
                     date: intervention.date || new Date().toISOString(),
                     room: roomData,
-                    equipeMedicale: staffData
+                    equipeMedicale: staffData,
+                    materiels: materialsData
                 });
             }
 
-            setInterventions(interventionsWithDetails);
-            setFilteredInterventions(interventionsWithDetails);
+            // Tri des interventions par date (les plus récentes en premier)
+            const sortedInterventions = interventionsWithDetails.sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            setInterventions(sortedInterventions);
+            setFilteredInterventions(sortedInterventions);
         } catch (err) {
             console.error("Erreur fetchInterventions:", err);
             setError(err.message);
@@ -114,39 +143,7 @@ const InterventionList = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm('Confirmez-vous la suppression définitive de cette intervention ?')) {
-            try {
-                await axios.delete(`http://localhost:8089/api/interventions/${id}`);
-                setInterventions(prev => prev.filter(i => i.id !== id));
-                toast.success("Intervention supprimée avec succès");
-            } catch (err) {
-                toast.error(err.response?.data?.message || "Erreur lors de la suppression");
-            }
-        }
-    };
-
-    const handleCancel = async (id) => {
-        if (window.confirm('Confirmez-vous l\'annulation de cette intervention ?')) {
-            try {
-                await axios.patch(`http://localhost:8089/api/interventions/${id}/annuler`);
-                setInterventions(prev => prev.map(i =>
-                    i.id === id ? { ...i, statut: 'ANNULEE' } : i
-                ));
-
-                // Envoyer notification par email
-                const intervention = interventions.find(i => i.id === id);
-                if (intervention) {
-                    await axios.post(`http://localhost:8089/api/interventions/${id}/notify-cancellation`);
-                }
-
-                toast.success("Intervention annulée avec succès");
-            } catch (err) {
-                toast.error(`Échec de l'annulation : ${err.response?.data?.message || err.message}`);
-            }
-        }
-    };
-
+    // Fonctions pour la gestion des salles (existantes)
     const handleShowRoomModal = (intervention) => {
         if (!intervention || !intervention.id) {
             toast.error("Intervention invalide");
@@ -156,16 +153,6 @@ const InterventionList = () => {
         setSelectedRoom(intervention.roomId || '');
         setShowRoomModal(true);
         fetchAvailableRooms(intervention);
-    };
-
-    const handleShowStaffModal = (intervention) => {
-        if (!intervention || !intervention.id) {
-            toast.error("Intervention invalide");
-            return;
-        }
-        setCurrentIntervention(intervention);
-        setShowStaffModal(true);
-        fetchAvailableStaff(intervention);
     };
 
     const fetchAvailableRooms = async (intervention) => {
@@ -205,6 +192,54 @@ const InterventionList = () => {
         } finally {
             setRoomLoading(false);
         }
+    };
+
+    const handleAssignRoom = async () => {
+        if (!selectedRoom || !currentIntervention?.id) {
+            toast.error("Veuillez sélectionner une salle valide");
+            return;
+        }
+
+        try {
+            setRoomLoading(true);
+            const selectedRoomData = availableRooms.find(r => r.id === selectedRoom);
+
+            await axios.patch(
+                `http://localhost:8089/api/interventions/${currentIntervention.id}/assign-room`,
+                null,
+                { params: { roomId: selectedRoom } }
+            );
+
+            setInterventions(prev => prev.map(i =>
+                i.id === currentIntervention.id
+                    ? {
+                        ...i,
+                        room: selectedRoomData,
+                        roomId: selectedRoom
+                    }
+                    : i
+            ));
+
+            setShowRoomModal(false);
+            setSelectedRoom('');
+            toast.success("Salle assignée avec succès");
+        } catch (err) {
+            console.error("Erreur handleAssignRoom:", err);
+            toast.error(`Échec de l'attribution: ${err.response?.data?.message || err.message}`);
+        } finally {
+            setRoomLoading(false);
+        }
+    };
+
+    // Fonctions pour la gestion du staff (existantes)
+    const handleShowStaffModal = (intervention) => {
+        if (!intervention || !intervention.id) {
+            toast.error("Intervention invalide");
+            return;
+        }
+        setCurrentIntervention(intervention);
+        setShowStaffModal(true);
+        fetchAvailableStaff(intervention);
     };
 
     const fetchAvailableStaff = async (intervention) => {
@@ -263,43 +298,6 @@ const InterventionList = () => {
         }
     };
 
-    const handleAssignRoom = async () => {
-        if (!selectedRoom || !currentIntervention?.id) {
-            toast.error("Veuillez sélectionner une salle valide");
-            return;
-        }
-
-        try {
-            setRoomLoading(true);
-            const selectedRoomData = availableRooms.find(r => r.id === selectedRoom);
-
-            await axios.patch(
-                `http://localhost:8089/api/interventions/${currentIntervention.id}/assign-room`,
-                null,
-                { params: { roomId: selectedRoom } }
-            );
-
-            setInterventions(prev => prev.map(i =>
-                i.id === currentIntervention.id
-                    ? {
-                        ...i,
-                        room: selectedRoomData,
-                        roomId: selectedRoom
-                    }
-                    : i
-            ));
-
-            setShowRoomModal(false);
-            setSelectedRoom('');
-            toast.success("Salle assignée avec succès");
-        } catch (err) {
-            console.error("Erreur handleAssignRoom:", err);
-            toast.error(`Échec de l'attribution: ${err.response?.data?.message || err.message}`);
-        } finally {
-            setRoomLoading(false);
-        }
-    };
-
     const handleStaffSelection = (role, staffId) => {
         setSelectedStaff(prev => ({
             ...prev,
@@ -307,8 +305,6 @@ const InterventionList = () => {
         }));
     };
 
-
-// Modifiez handleAssignStaff
     const handleAssignStaff = async () => {
         if (!currentIntervention?.id) {
             toast.error("Intervention invalide");
@@ -332,9 +328,6 @@ const InterventionList = () => {
                 staffToAssign
             );
 
-            // Envoyer notification d'assignation
-
-
             const [updatedIntervention, staffResponse] = await Promise.all([
                 axios.get(`http://localhost:8089/api/interventions/${currentIntervention.id}`),
                 axios.get(`http://localhost:8089/api/interventions/${currentIntervention.id}/staff`)
@@ -357,6 +350,134 @@ const InterventionList = () => {
             toast.error(`Échec de l'attribution: ${err.response?.data?.message || err.message}`);
         } finally {
             setStaffLoading(false);
+        }
+    };
+    const fetchAvailableMaterials = async (intervention) => {
+        if (!intervention) return;
+
+        setMaterialLoading(true);
+        try {
+            // Formatage des dates pour l'API
+            const startTime = intervention.startTime || `${intervention.date}T08:00:00`;
+            const endTime = intervention.endTime || `${intervention.date}T18:00:00`;
+
+            const response = await axios.get('http://localhost:8089/api/materiels/available', {
+                params: {
+                    startTime: startTime.replace(" ", "T"), // Assure le bon format
+                    endTime: endTime.replace(" ", "T"),
+                    interventionId: intervention.id
+                }
+            });
+
+            const materials = Array.isArray(response.data) ? response.data : [];
+            setAvailableMaterials(materials);
+
+            // Charger les matériels déjà assignés
+            const assignedResponse = await axios.get(
+                `http://localhost:8089/api/interventions/${intervention.id}/materiels`
+            );
+            const assignedMaterials = Array.isArray(assignedResponse.data) ? assignedResponse.data : [];
+            setSelectedMaterials(assignedMaterials.map(m => m.id));
+
+        } catch (err) {
+            console.error("Erreur fetchAvailableMaterials:", err);
+
+            // Fallback: charger tous les matériels si l'API échoue
+            try {
+                const allMateriels = await axios.get('http://localhost:8089/api/materiels');
+                setAvailableMaterials(Array.isArray(allMateriels.data) ? allMateriels.data : []);
+            } catch (fallbackError) {
+                console.error("Erreur fallback:", fallbackError);
+                setAvailableMaterials([]);
+            }
+        } finally {
+            setMaterialLoading(false);
+        }
+    };
+
+    const handleMaterialSelection = (materialId, isChecked) => {
+        setSelectedMaterials(prev =>
+            isChecked
+                ? [...prev, materialId]
+                : prev.filter(id => id !== materialId)
+        );
+    };
+
+    const handleAssignMaterials = async () => {
+        if (!currentIntervention?.id) {
+            toast.error("Intervention invalide");
+            return;
+        }
+
+        try {
+            setMaterialLoading(true);
+
+            // Format correct pour le backend
+            const requestData = {
+                materialIds: selectedMaterials
+            };
+
+            await axios.post(
+                `http://localhost:8089/api/interventions/${currentIntervention.id}/assign-materials`,
+                requestData
+            );
+
+            // Rafraîchir les données
+            const [updatedIntervention, materialsResponse] = await Promise.all([
+                axios.get(`http://localhost:8089/api/interventions/${currentIntervention.id}`),
+                axios.get(`http://localhost:8089/api/interventions/${currentIntervention.id}/materiels`)
+            ]);
+
+            setInterventions(prev => prev.map(i =>
+                i.id === currentIntervention.id
+                    ? {
+                        ...i,
+                        ...updatedIntervention.data,
+                        materiels: Array.isArray(materialsResponse.data) ? materialsResponse.data : []
+                    }
+                    : i
+            ));
+
+            setShowMaterialModal(false);
+            toast.success("Matériels assignés avec succès");
+        } catch (err) {
+            console.error("Erreur handleAssignMaterials:", err);
+            toast.error(`Échec: ${err.response?.data?.message || err.message}`);
+        } finally {
+            setMaterialLoading(false);
+        }
+    };
+    // Fonctions communes (delete, cancel)
+    const handleDelete = async (id) => {
+        if (window.confirm('Confirmez-vous la suppression définitive de cette intervention ?')) {
+            try {
+                await axios.delete(`http://localhost:8089/api/interventions/${id}`);
+                setInterventions(prev => prev.filter(i => i.id !== id));
+                toast.success("Intervention supprimée avec succès");
+            } catch (err) {
+                toast.error(err.response?.data?.message || "Erreur lors de la suppression");
+            }
+        }
+    };
+
+    const handleCancel = async (id) => {
+        if (window.confirm('Confirmez-vous l\'annulation de cette intervention ?')) {
+            try {
+                await axios.patch(`http://localhost:8089/api/interventions/${id}/annuler`);
+                setInterventions(prev => prev.map(i =>
+                    i.id === id ? { ...i, statut: 'ANNULEE' } : i
+                ));
+
+                // Envoyer notification par email
+                const intervention = interventions.find(i => i.id === id);
+                if (intervention) {
+                    await axios.post(`http://localhost:8089/api/interventions/${id}/notify-cancellation`);
+                }
+
+                toast.success("Intervention annulée avec succès");
+            } catch (err) {
+                toast.error(`Échec de l'annulation : ${err.response?.data?.message || err.message}`);
+            }
         }
     };
 
@@ -398,6 +519,7 @@ const InterventionList = () => {
                         <th>Statut</th>
                         <th>Salle</th>
                         <th>Équipe médicale</th>
+                        <th>Matériels</th>
                         <th>Heure début</th>
                         <th>Heure fin</th>
                         <th>Actions</th>
@@ -416,10 +538,9 @@ const InterventionList = () => {
                                     {intervention.type?.replace(/_/g, ' ').toLowerCase() || 'Non spécifié'}
                                 </td>
                                 <td>
-                                        <span
-                                            className={`status-badge status-${intervention.statut?.toLowerCase() || 'inconnu'}`}>
-                                            {intervention.statut?.toLowerCase() || 'inconnu'}
-                                        </span>
+                                    <span className={`status-badge status-${intervention.statut?.toLowerCase() || 'inconnu'}`}>
+                                        {intervention.statut?.toLowerCase() || 'inconnu'}
+                                    </span>
                                 </td>
                                 <td>
                                     {intervention.room ? (
@@ -443,6 +564,20 @@ const InterventionList = () => {
                                         </div>
                                     ) : (
                                         <span className="no-staff">Non assignée</span>
+                                    )}
+                                </td>
+                                <td>
+                                    {intervention.materiels?.length > 0 ? (
+                                        <div className="materials-list">
+                                            {intervention.materiels.map(materiel => (
+                                                <div key={materiel.id} className="material-item">
+                                                    <span className="material-name">{materiel.nom}</span>
+                                                    <span className="material-quantity">({materiel.quantiteDisponible})</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <span className="no-materials">Aucun matériel</span>
                                     )}
                                 </td>
                                 <td>{intervention.startTime ? format(parseISO(intervention.startTime), 'HH:mm') : 'Non défini'}</td>
@@ -494,11 +629,15 @@ const InterventionList = () => {
                                         </button>
 
                                         <button
-                                            onClick={() => navigate(`/interventions/${intervention.id}/materiels`)}
+                                            onClick={() => {
+                                                setCurrentIntervention(intervention);
+                                                setShowMaterialModal(true);
+                                                fetchAvailableMaterials(intervention);
+                                            }}
                                             className="btn-action materials-btn"
                                             title="Matériels"
                                         >
-                                            � Matériels
+                                            🏷️ Matériels
                                         </button>
                                     </div>
                                 </td>
@@ -506,7 +645,7 @@ const InterventionList = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="8" className="no-interventions">
+                            <td colSpan="9" className="no-interventions">
                                 {loading ? 'Chargement...' : 'Aucune intervention trouvée'}
                             </td>
                         </tr>
@@ -611,6 +750,59 @@ const InterventionList = () => {
                                 disabled={staffLoading || !Object.values(selectedStaff).some(Boolean)}
                             >
                                 {staffLoading ? 'Chargement...' : 'Assigner l\'équipe'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal pour l'assignation de matériels */}
+            {showMaterialModal && currentIntervention && (
+                <div className="modal-backdrop">
+                    <div className="modal modal-wide">
+                        <div className="modal-header">
+                            <h3>Assigner les matériels</h3>
+                            <button onClick={() => setShowMaterialModal(false)} className="close-btn">&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            {materialLoading ? (
+                                <div className="loading">Chargement des matériels...</div>
+                            ) : availableMaterials.length > 0 ? (
+                                <div className="materials-grid">
+                                    {availableMaterials.map(material => (
+                                        <div key={material.id} className="material-item">
+                                            <input
+                                                type="checkbox"
+                                                id={`material-${material.id}`}
+                                                checked={selectedMaterials.includes(material.id)}
+                                                onChange={(e) => handleMaterialSelection(material.id, e.target.checked)}
+                                            />
+                                            <label htmlFor={`material-${material.id}`}>
+                                                <span className="material-name">{material.nom}</span>
+                                                <span className="material-details">
+                                                    {material.description} - {material.quantiteDisponible} disponible(s)
+                                                </span>
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="no-materials">Aucun matériel disponible</div>
+                            )}
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                onClick={() => setShowMaterialModal(false)}
+                                className="btn btn-cancel"
+                            >
+                                Annuler
+                            </button>
+                            <button
+                                onClick={handleAssignMaterials}
+                                className="btn btn-confirm"
+                                disabled={materialLoading || selectedMaterials.length === 0}
+                            >
+                                {materialLoading ? 'Chargement...' : 'Assigner les matériels'}
                             </button>
                         </div>
                     </div>

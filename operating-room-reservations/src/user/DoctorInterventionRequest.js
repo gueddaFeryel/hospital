@@ -5,61 +5,68 @@ import './DoctorInterventionRequest.css';
 
 const DoctorInterventionRequest = () => {
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         date: '',
         type: '',
-        statut: 'DEMANDE', // Changed from 'PLANIFIEE' to 'DEMANDE'
+        statut: 'DEMANDE',
         startTime: '',
         endTime: '',
-        roomId: null,
-        description: '', // Added for doctor's description
-        urgencyLevel: 'NORMAL' // Added for urgency level
+        description: '',
+        urgencyLevel: 'NORMAL'
     });
 
-    const [availableRooms, setAvailableRooms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [roomLoading, setRoomLoading] = useState(false);
-    const [selectedRoom, setSelectedRoom] = useState(null);
-    const [doctorInfo, setDoctorInfo] = useState(null); // Added for doctor info
+    const [doctorInfo, setDoctorInfo] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
+    const [interventionTypes, setInterventionTypes] = useState([]);
 
-    // Fetch doctor info on component mount
     useEffect(() => {
         const fetchDoctorInfo = async () => {
             try {
-                // Replace with actual API call to get doctor info
-                const response = await axios.get('http://localhost:8080/api/doctors/me');
+                const token = localStorage.getItem('token');
+                const response = await axios.get('http://localhost:8080/api/doctors/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 setDoctorInfo(response.data);
             } catch (err) {
                 console.error("Error fetching doctor info:", err);
             }
         };
+
+        const fetchInterventionTypes = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/interventions/types');
+                setInterventionTypes(response.data);
+            } catch (err) {
+                console.error("Failed to fetch intervention types", err);
+            }
+        };
+
         fetchDoctorInfo();
+        fetchInterventionTypes();
     }, []);
 
     const validateForm = () => {
         const errors = {};
         const today = new Date().toISOString().split('T')[0];
 
-        // Date validation
         if (!formData.date) {
             errors.date = "La date est requise";
         } else if (formData.date < today) {
             errors.date = "Vous ne pouvez pas créer une intervention dans le passé";
         }
 
-        // Type validation
         if (!formData.type) {
             errors.type = "Le type est requis";
         }
 
-        // Description validation
         if (!formData.description) {
             errors.description = "Veuillez fournir une description de l'intervention";
         }
 
-        // Time validation
         if (formData.startTime && formData.endTime) {
             const start = new Date(`${formData.date}T${formData.startTime}`);
             const end = new Date(`${formData.date}T${formData.endTime}`);
@@ -82,49 +89,11 @@ const DoctorInterventionRequest = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleRoomChange = (e) => {
-        const roomId = e.target.value;
-        const selected = availableRooms.find(r => r.id.toString() === roomId);
-        setSelectedRoom(selected || null);
-        setFormData(prev => ({ ...prev, roomId: selected ? selected.id : null }));
-    };
-
-    const fetchAvailableRooms = async () => {
-        try {
-            if (!formData.type || !formData.date) {
-                alert("Veuillez d'abord sélectionner un type et une date");
-                return;
-            }
-
-            setRoomLoading(true);
-            setError(null);
-
-            const startTime = formData.startTime || '08:00';
-            const endTime = formData.endTime || '18:00';
-
-            const startDateTime = `${formData.date}T${startTime}:00`;
-            const endDateTime = `${formData.date}T${endTime}:00`;
-
-            const response = await axios.get('http://localhost:8089/api/interventions/available-rooms', {
-                params: {
-                    startTime: startDateTime,
-                    endTime: endDateTime,
-                    type: formData.type
-                }
-            });
-
-            setAvailableRooms(response.data || []);
-        } catch (err) {
-            setError(err.response?.data?.message || err.message);
-            console.error('Error fetching rooms:', err);
-        } finally {
-            setRoomLoading(false);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError(null);
+        setSuccessMessage(null);
 
         const errors = validateForm();
         if (Object.keys(errors).length > 0) {
@@ -137,25 +106,51 @@ const DoctorInterventionRequest = () => {
             const payload = {
                 date: formData.date,
                 type: formData.type,
-                statut: formData.statut,
-                roomId: selectedRoom?.id ? Number(selectedRoom.id) : null,
-                doctorId: doctorInfo?.id, // Using doctor's ID
+                statut: 'DEMANDE',
+                doctorId: doctorInfo?.id,
                 startTime: formData.startTime ? `${formData.date}T${formData.startTime}:00` : null,
                 endTime: formData.endTime ? `${formData.date}T${formData.endTime}:00` : null,
                 description: formData.description,
                 urgencyLevel: formData.urgencyLevel,
-                isRequest: true // Flag to indicate this is a request
+                isRequest: true
             };
 
-            await axios.post('http://localhost:8089/api/interventions/doctor-request', payload);
+            const token = localStorage.getItem('token');
+            await axios.post('http://localhost:8080/api/interventions', payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-            navigate('/doctor-dashboard');
+            setSuccessMessage("Demande envoyée avec succès! Une notification a été envoyée à l'administrateur.");
+
+            setTimeout(() => {
+                setFormData({
+                    date: '',
+                    type: '',
+                    statut: 'DEMANDE',
+                    startTime: '',
+                    endTime: '',
+                    description: '',
+                    urgencyLevel: 'NORMAL'
+                });
+                setSuccessMessage(null);
+            }, 3000);
+
         } catch (err) {
-            const errorMessage = err.response?.data?.message
-                || err.response?.data
-                || err.message
-                || 'Erreur inconnue';
-            setError(`Erreur: ${errorMessage}`);
+            let errorMessage = 'Erreur lors de la soumission';
+            if (err.response) {
+                if (err.response.status === 401) {
+                    errorMessage = "Votre session a expiré, veuillez vous reconnecter";
+                    navigate('/login');
+                } else if (err.response.data && err.response.data.errors) {
+                    errorMessage = Object.values(err.response.data.errors).join(", ");
+                } else {
+                    errorMessage = err.response.data?.message || err.response.data;
+                }
+            }
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -166,10 +161,12 @@ const DoctorInterventionRequest = () => {
     return (
         <div className="intervention-form-container">
             <h2>Demande d'Intervention</h2>
-            <Link to="/doctor-dashboard" className="btn btn-back">
-                <i className="fas fa-arrow-left"></i> Retour au dashboard
+            <Link to="/home" className="btn btn-back">
+                <i className="fas fa-arrow-left"></i> Retour à l'accueil
             </Link>
+
             {error && <div className="error">{error}</div>}
+            {successMessage && <div className="success">{successMessage}</div>}
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -195,13 +192,9 @@ const DoctorInterventionRequest = () => {
                         className="form-control"
                     >
                         <option value="">Sélectionner un type</option>
-                        <option value="CHIRURGIE_CARDIAQUE">Chirurgie cardiaque</option>
-                        <option value="ORTHOPEDIQUE">Orthopédique</option>
-                        <option value="NEUROCHIRURGIE">Neurochirurgie</option>
-                        <option value="OPHTALMOLOGIQUE">Ophtalmologique</option>
-                        <option value="UROLOGIE">Urologie</option>
-                        <option value="GYNECOLOGIQUE">Gynécologique</option>
-                        <option value="AUTRE">Autre</option>
+                        {interventionTypes.map((type) => (
+                            <option key={type} value={type}>{type}</option>
+                        ))}
                     </select>
                 </div>
 
@@ -233,7 +226,7 @@ const DoctorInterventionRequest = () => {
                 </div>
 
                 <div className="form-group">
-                    <label>Heure de début:</label>
+                    <label>Heure de début (optionnel):</label>
                     <input
                         type="time"
                         name="startTime"
@@ -244,7 +237,7 @@ const DoctorInterventionRequest = () => {
                 </div>
 
                 <div className="form-group">
-                    <label>Heure de fin:</label>
+                    <label>Heure de fin (optionnel):</label>
                     <input
                         type="time"
                         name="endTime"
@@ -252,52 +245,6 @@ const DoctorInterventionRequest = () => {
                         onChange={handleChange}
                         className="form-control"
                     />
-                </div>
-
-                <div className="room-section">
-                    <button
-                        type="button"
-                        onClick={fetchAvailableRooms}
-                        disabled={!formData.type || !formData.date || roomLoading}
-                        className="btn btn-find-room"
-                    >
-                        {roomLoading ? 'Recherche en cours...' : 'Vérifier les salles disponibles'}
-                    </button>
-
-                    {roomLoading && <p>Chargement des salles disponibles...</p>}
-
-                    {availableRooms.length > 0 && (
-                        <div className="room-selection">
-                            <label>Choisir une salle (optionnel):</label>
-                            <select
-                                value={selectedRoom?.id || ''}
-                                onChange={handleRoomChange}
-                                className="form-control room-select"
-                            >
-                                <option value="">-- Sélectionnez une salle --</option>
-                                {availableRooms.map(room => (
-                                    <option key={room.id} value={room.id}>
-                                        {room.name} ({room.equipment})
-                                        {selectedRoom?.id === room.id ? ' (sélectionnée)' : ''}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
-
-                    {!roomLoading && availableRooms.length === 0 && formData.type && formData.date && (
-                        <p className="no-room-msg">Aucune salle disponible pour les critères choisis.</p>
-                    )}
-
-                    {selectedRoom && (
-                        <div className="current-room">
-                            <h4>Salle suggérée</h4>
-                            <div className="room-info">
-                                <span className="room-name">{selectedRoom.name}</span>
-                                <span className="room-equipment">{selectedRoom.equipment}</span>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
                 <div className="form-actions">
@@ -310,7 +257,7 @@ const DoctorInterventionRequest = () => {
                     </button>
                     <button
                         type="button"
-                        onClick={() => navigate('/doctor-dashboard')}
+                        onClick={() => navigate('/home')}
                         className="btn btn-cancel"
                     >
                         Annuler

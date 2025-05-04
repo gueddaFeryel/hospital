@@ -1,6 +1,7 @@
 package com.example.UserService.controller;
 
 import com.example.UserService.model.Reservation;
+import com.example.UserService.repository.ReservationRepository;
 import com.example.UserService.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,8 @@ public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @PostMapping("/{roomName}")
     public ResponseEntity<Reservation> createReservation(
@@ -87,5 +91,29 @@ public class ReservationController {
             ));
         }
     }
+
+    @GetMapping("/check-conflict")
+    public ResponseEntity<Map<String, Boolean>> checkReservationConflict(
+            @RequestParam String roomName,
+            @RequestParam String startTime,
+            @RequestParam String endTime,
+            @RequestParam(required = false) Long excludeId) {
+
+        LocalDateTime start = LocalDateTime.parse(startTime);
+        LocalDateTime end = LocalDateTime.parse(endTime);
+        LocalDateTime now = LocalDateTime.now();
+
+        // Si la réservation est dans le passé, pas de conflit
+        if (end.isBefore(now)) {
+            return ResponseEntity.ok(Collections.singletonMap("hasConflict", false));
+        }
+
+        boolean hasConflict = reservationRepository.existsConflictingReservation(
+                roomName, start, end, excludeId
+        );
+
+        return ResponseEntity.ok(Collections.singletonMap("hasConflict", hasConflict));
+    }
+
 
 }

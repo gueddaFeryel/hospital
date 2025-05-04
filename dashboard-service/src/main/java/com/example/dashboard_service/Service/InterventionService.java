@@ -6,8 +6,10 @@ import com.example.dashboard_service.Repository.InterventionRepository;
 import com.example.dashboard_service.Repository.MaterielRepository;
 import com.example.dashboard_service.Repository.MedicalStaffRepository;
 import com.example.dashboard_service.model.*;
+import com.example.dashboard_service.model.dto.InterventionRequest;
 import com.example.dashboard_service.model.dto.MaterielAssignmentDTO;
 import jakarta.transaction.Transactional;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class InterventionService {
@@ -373,51 +376,38 @@ public class InterventionService {
         interventionRepository.save(intervention);
     }
     @Transactional
-    public InterventionChirurgicale assignerMaterielAvecQuantite(
-            Long interventionId,
-            List<MaterielAssignmentDTO> assignments) {
-
+    public InterventionChirurgicale assignMaterials(Long interventionId, List<MaterielAssignmentDTO> assignments) {
         InterventionChirurgicale intervention = interventionRepository.findById(interventionId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Intervention non trouvée"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Intervention non trouvée"));
 
-        // Désassocier les anciens matériels
-        for (Materiel ancienMateriel : intervention.getMateriels()) {
-            ancienMateriel.getInterventions().remove(intervention);
-            ancienMateriel.setQuantiteDisponible(
-                    ancienMateriel.getQuantiteDisponible() +
-                            getQuantiteAssignee(intervention, ancienMateriel.getId()));
-            materielRepository.save(ancienMateriel);
+        // Récupérer tous les matériels en une seule requête
+        List<Long> materialIds = assignments.stream()
+                .map(MaterielAssignmentDTO::getMaterialId)
+                .collect(Collectors.toList());
+
+        List<Materiel> materiels = materielRepository.findAllById(materialIds);
+
+        // Vérifier que tous les matériels existent
+        if (materiels.size() != assignments.size()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un ou plusieurs matériels n'existent pas");
         }
-        intervention.getMateriels().clear();
 
-        // Associer les nouveaux matériels
+        // Vérifier les quantités disponibles
         for (MaterielAssignmentDTO assignment : assignments) {
-            Materiel materiel = materielRepository.findById(assignment.getMaterialId())
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            "Matériel non trouvé: " + assignment.getMaterialId()));
+            Materiel materiel = materiels.stream()
+                    .filter(m -> m.getId().equals(assignment.getMaterialId()))
+                    .findFirst()
+                    .orElseThrow();
 
-            materiel.setQuantiteDisponible(
-                    materiel.getQuantiteDisponible() - assignment.getQuantity());
-
-            // Créer une entrée dans la table de jointure avec la quantité
-            materiel.getInterventions().add(intervention);
-            intervention.getMateriels().add(materiel);
-
-            // Pour gérer la quantité, vous aurez besoin d'une table de jointure avec attribut
-            // Voir la section suivante pour le modèle
-
-            materielRepository.save(materiel);
+            if (materiel.getQuantiteDisponible() < assignment.getQuantity()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Quantité insuffisante pour le matériel: " + materiel.getNom());
+            }
         }
 
+        // Associer les matériels à l'intervention
+        intervention.setMateriels((Set<Materiel>) materiels);
         return interventionRepository.save(intervention);
-    }
-
-    private int getQuantiteAssignee(InterventionChirurgicale intervention, Long materielId) {
-        // Implémentez cette méthode selon votre modèle de données
-        // Retourne la quantité précédemment assignée
-        return 1; // À adapter
     }
 
     @Scheduled(cron = "0 0 9 * * ?") // Tous les jours à 9h

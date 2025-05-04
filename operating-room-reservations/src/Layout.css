@@ -1,0 +1,12 @@
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 250px; /* Largeur de la sidebar */
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}

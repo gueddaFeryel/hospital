@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -21,25 +20,18 @@ public class MaterielController {
     @Autowired
     private MaterielService materielService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createMateriel(@RequestBody Map<String, Object> requestMap) {
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,  // Accepte aussi "application/json;charset=UTF-8"
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> createMateriel(@RequestBody Materiel materiel) {
+        System.out.println("Reçu: " + materiel); // Debug
         try {
-            Materiel materiel = new Materiel();
-            materiel.setNom((String) requestMap.get("nom"));
-            materiel.setDescription((String) requestMap.get("description"));
-            materiel.setQuantiteDisponible(Integer.parseInt(requestMap.get("quantiteDisponible").toString()));
-            materiel.setCategorie(CategorieMateriel.valueOf((String) requestMap.get("categorie")));
-
-            // Validation manuelle
-            if (materiel.getNom() == null || materiel.getNom().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Le nom est obligatoire");
-            }
-
             Materiel saved = materielService.createMateriel(materiel);
             return ResponseEntity.ok(saved);
-
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
+            e.printStackTrace(); // Affiche l'erreur dans les logs
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @GetMapping
@@ -64,43 +56,10 @@ public class MaterielController {
         return materielService.searchMateriels(nom);
     }
 
-    @PutMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMateriel(
-            @PathVariable Long id,
-            @RequestBody Map<String, Object> requestMap) {
-
-        try {
-            // Récupération du matériel existant
-            Materiel existingMateriel = materielService.getMaterielById(id)
-                    .orElseThrow(() -> new RuntimeException("Matériel non trouvé"));
-
-            // Mise à jour des champs
-            if (requestMap.containsKey("nom")) {
-                existingMateriel.setNom((String) requestMap.get("nom"));
-            }
-            if (requestMap.containsKey("description")) {
-                existingMateriel.setDescription((String) requestMap.get("description"));
-            }
-            if (requestMap.containsKey("quantiteDisponible")) {
-                existingMateriel.setQuantiteDisponible(Integer.parseInt(requestMap.get("quantiteDisponible").toString()));
-            }
-            if (requestMap.containsKey("categorie")) {
-                existingMateriel.setCategorie(CategorieMateriel.valueOf((String) requestMap.get("categorie")));
-            }
-
-            // Validation
-            if (existingMateriel.getNom() == null || existingMateriel.getNom().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Le nom est obligatoire");
-            }
-
-            Materiel updated = materielService.updateMateriel(id, existingMateriel);
-            return ResponseEntity.ok(updated);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Materiel> updateMateriel(@PathVariable Long id, @RequestBody Materiel updatedMateriel) {
+        Materiel materiel = materielService.updateMateriel(id, updatedMateriel);
+        return ResponseEntity.ok(materiel);
     }
 
     @DeleteMapping("/{id}")

@@ -89,9 +89,6 @@ const RoomsByCategory = () => {
         <div className="rooms-by-category-container">
             <div className="header-section">
                 <h1 className="page-title">Salles d'Opération par Catégorie</h1>
-                <Link to="/create-room" className="add-room-btn">
-                    + Ajouter une Salle
-                </Link>
             </div>
             <Link to="/dashboard" className="btn btn-back">
                 <i className="fas fa-arrow-left"></i> Retour au dashboard
@@ -103,13 +100,24 @@ const RoomsByCategory = () => {
                             className="category-header"
                             onClick={() => toggleCategory(category)}
                         >
-                            <h2 className="category-title">
-                                {category}
-                                <span className="room-count">({rooms.length})</span>
-                            </h2>
-                            <span className="toggle-icon">
-                                {expandedCategories[category] ? '−' : '+'}
-                            </span>
+                            <div className="category-title-container">
+                                <h2 className="category-title">
+                                    {category}
+                                    <span className="room-count">({rooms.length})</span>
+                                </h2>
+                            </div>
+                            <div className="category-header-actions">
+                                <Link
+                                    to={`/create-room?category=${encodeURIComponent(category)}`}
+                                    className="add-room-btn"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <i className="fas fa-plus"></i> +
+                                </Link>
+                                <span className="toggle-icon">
+                                    {expandedCategories[category] ? '^' : 'v'}
+                                </span>
+                            </div>
                         </div>
 
                         {expandedCategories[category] && (
@@ -122,19 +130,22 @@ const RoomsByCategory = () => {
                                                 <p className="room-location">
                                                     <span className="label">Emplacement:</span> {room.location}
                                                 </p>
+                                                <p className="room-category">
+                                                    <span className="label">Catégorie:</span> {room.category}
+                                                </p>
                                             </div>
                                             <div className="room-actions">
                                                 <Link
                                                     to={`/edit-room/${room.id}`}
                                                     className="action-btn edit-btn"
                                                 >
-                                                    Modifier
+                                                    <i className="fas fa-edit"></i> Modifier
                                                 </Link>
                                                 <button
                                                     onClick={() => handleDeleteRoom(room.id)}
                                                     className="action-btn delete-btn"
                                                 >
-                                                    Supprimer
+                                                    <i className="fas fa-trash"></i> Supprimer
                                                 </button>
                                             </div>
                                         </div>

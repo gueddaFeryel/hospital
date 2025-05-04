@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { db, auth } from './firebase';
+import { db } from './firebase';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faUserClock,
-    faCalendarCheck,
-    faChartBar,
-    faCog,
-    faSignOutAlt
-} from '@fortawesome/free-solid-svg-icons';
-import { signOut } from 'firebase/auth';
+import { FaSearch, FaUserCheck } from 'react-icons/fa';
 import './AdminDashboard.css';
 
 function AdminDashboard() {
     const [pendingUsers, setPendingUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSyncing, setIsSyncing] = useState(false);
-    const location = useLocation();
-    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchPendingUsers = async () => {
@@ -74,25 +64,16 @@ function AdminDashboard() {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            navigate('/login');
-        } catch (error) {
-            console.error("Erreur lors de la déconnexion:", error);
-            alert("Une erreur est survenue lors de la déconnexion");
-        }
-    };
+    const filteredUsers = pendingUsers.filter(user =>
+        `${user.prenom} ${user.nom}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     if (loading) {
         return (
-            <div className="admin-container">
-                <div className="admin-sidebar">
-                    <div className="sidebar-header">
-                        <h3>Tableau de Bord</h3>
-                    </div>
-                </div>
-                <div className="admin-content loading">
+            <div className="admin-dashboard-container">
+                <div className="loading-spinner">
                     <div className="spinner"></div>
                 </div>
             </div>
@@ -100,72 +81,38 @@ function AdminDashboard() {
     }
 
     return (
-        <div className="admin-container">
-            <div className="admin-sidebar">
-                <div className="sidebar-header">
-                    <h3>Tableau de Bord</h3>
-                </div>
+        <div className="admin-dashboard-container">
+            {/* En-tête avec effet verre */}
+            <div className="dashboard-header">
+                <div className="header-content">
+                    <h2>Approbation des Utilisateurs</h2>
 
-                <nav className="sidebar-nav">
-                    <ul>
-                        <li className={location.pathname === '/dashboard' ? 'active' : ''}>
-                            <Link to="/dashboard">
-                                <FontAwesomeIcon icon={faUserClock}/>
-                                <span>Utilisateurs</span>
-                            </Link>
-                        </li>
-                        <li className={location.pathname === '/interventionList' ? 'active' : ''}>
-                            <Link to="/interventionList">
-                                <FontAwesomeIcon icon={faCalendarCheck}/>
-                                <span>Interventions</span>
-                            </Link>
-                        </li>
-                        <li className={location.pathname === '/reservation' ? 'active' : ''}>
-                            <Link to="/reservation">
-                                <FontAwesomeIcon icon={faChartBar}/>
-                                <span>Reservations</span>
-                            </Link>
-                        </li>
-                        <li className={location.pathname === '/staff' ? 'active' : ''}>
-                            <Link to="/staff">
-                                <FontAwesomeIcon icon={faCog}/>
-                                <span>l'equipe medicale</span>
-                            </Link>
-                        </li>
-                        <li className={location.pathname === '/salle' ? 'active' : ''}>
-                            <Link to="/salle">
-                                <FontAwesomeIcon icon={faCog}/>
-                                <span>Salle</span>
-                            </Link>
-                        </li>
-                        <li className={location.pathname === '/materiels' ? 'active' : ''}>
-                            <Link to="/materiels">
-                                <FontAwesomeIcon icon={faCog}/>
-                                <span>Materiels</span>
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
-
-                <div className="sidebar-footer">
-                    <button className="logout-btn" onClick={handleLogout}>
-                        <FontAwesomeIcon icon={faSignOutAlt}/>
-                        <span>Déconnexion</span>
-                    </button>
+                    {/* Barre de recherche déplacée sous le titre */}
+                    <div className="search-container">
+                        <FaSearch className="search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Rechercher un utilisateur..."
+                            className="search-bar"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
 
-            <div className="admin-content">
-                <div className="content-header">
-                    <h2>Utilisateurs en attente d'approbation</h2>
-                </div>
-
-                {pendingUsers.length === 0 ? (
+            {/* Contenu principal */}
+            <div className="dashboard-content">
+                {filteredUsers.length === 0 ? (
                     <div className="empty-state">
-                        <p>Aucun utilisateur en attente d'approbation</p>
+                        {pendingUsers.length === 0 ? (
+                            <p>Aucun utilisateur en attente d'approbation</p>
+                        ) : (
+                            <p>Aucun résultat trouvé pour "{searchTerm}"</p>
+                        )}
                     </div>
                 ) : (
-                    <div className="users-table-container">
+                    <div className="users-table-wrapper">
                         <table className="users-table">
                             <thead>
                             <tr>
@@ -176,14 +123,14 @@ function AdminDashboard() {
                             </tr>
                             </thead>
                             <tbody>
-                            {pendingUsers.map(user => (
-                                <tr key={user.id}>
+                            {filteredUsers.map((user, index) => (
+                                <tr key={user.id} style={{ animationDelay: `${index * 0.1}s` }}>
                                     <td>{user.prenom} {user.nom}</td>
                                     <td>{user.email}</td>
                                     <td>
-                                        <span className={`role-badge ${user.role}`}>
-                                            {user.role}
-                                        </span>
+                                            <span className={`role-badge ${user.role.toLowerCase()}`}>
+                                                {user.role}
+                                            </span>
                                     </td>
                                     <td>
                                         <button
@@ -191,7 +138,7 @@ function AdminDashboard() {
                                             disabled={isSyncing}
                                             className="approve-btn"
                                         >
-                                            {isSyncing ? 'Traitement...' : 'Approuver'}
+                                            <FaUserCheck /> {isSyncing ? 'Traitement...' : 'Approuver'}
                                         </button>
                                     </td>
                                 </tr>

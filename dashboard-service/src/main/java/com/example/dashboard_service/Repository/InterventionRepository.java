@@ -4,6 +4,7 @@ package com.example.dashboard_service.Repository;
 
 
 import com.example.dashboard_service.model.InterventionChirurgicale;
+import com.example.dashboard_service.model.Materiel;
 import com.example.dashboard_service.model.StatutIntervention;
 import com.example.dashboard_service.model.TypeIntervention;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface InterventionRepository extends JpaRepository<InterventionChirurgicale, Long> {
-
+    @Query("SELECT DISTINCT m FROM InterventionChirurgicale i JOIN i.materiels m " +
+            "WHERE i.id != :interventionId " +
+            "AND ((i.startTime < :end AND i.endTime > :start))")
+    List<Materiel> findMaterielsReservedBetween(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("interventionId") Long interventionId);
     List<InterventionChirurgicale> findByDate(LocalDate date);
 
     List<InterventionChirurgicale> findByStatut(StatutIntervention statut);
@@ -67,4 +74,18 @@ public interface InterventionRepository extends JpaRepository<InterventionChirur
 
 
     List<InterventionChirurgicale> findByStartTimeBetween(LocalDateTime start, LocalDateTime end);
+
+
+    @Query("SELECT COUNT(i) > 0 FROM InterventionChirurgicale i WHERE " +
+            "i.roomId = :roomId AND " +
+            "i.statut NOT IN (com.example.dashboard_service.model.StatutIntervention.ANNULEE, " +
+            "com.example.dashboard_service.model.StatutIntervention.TERMINEE) AND " +
+            "((i.startTime < :end AND i.endTime > :start) OR " +
+            "(i.startTime = :start AND i.endTime = :end)) AND " +
+            "(i.id != :excludeId OR :excludeId IS NULL)")
+    boolean existsByRoomIdAndTimeRange(
+            @Param("roomId") Long roomId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("excludeId") Long excludeId);
 }

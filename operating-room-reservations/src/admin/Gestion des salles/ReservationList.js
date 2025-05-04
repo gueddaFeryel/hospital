@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {Link, useNavigate} from 'react-router-dom';
-import '../Gestion des salles css/ReservationList.css'; // Fichier CSS que nous allons créer
+import { Link, useNavigate } from 'react-router-dom';
+import '../Gestion des salles css/ReservationList.css';
 
 const ReservationList = () => {
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [sortConfig, setSortConfig] = useState({ key: 'startTime', direction: 'desc' });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,7 +38,25 @@ const ReservationList = () => {
         }
     };
 
-    const filteredReservations = reservations.filter(reservation =>
+    const requestSort = (key) => {
+        let direction = 'desc';
+        if (sortConfig.key === key && sortConfig.direction === 'desc') {
+            direction = 'asc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortedReservations = [...reservations].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
+
+    const filteredReservations = sortedReservations.filter(reservation =>
         reservation.operatingRoom?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         new Date(reservation.startTime).toLocaleString().toLowerCase().includes(searchTerm.toLowerCase()) ||
         new Date(reservation.endTime).toLocaleString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -94,9 +113,21 @@ const ReservationList = () => {
                 <table className="reservation-table">
                     <thead>
                     <tr>
-                        <th>Salle</th>
-                        <th>Date de Début</th>
-                        <th>Date de Fin</th>
+                        <th onClick={() => requestSort('operatingRoom.name')}>
+                            Salle {sortConfig.key === 'operatingRoom.name' && (
+                            <i className={`fas fa-arrow-${sortConfig.direction === 'asc' ? 'up' : 'down'}`} />
+                        )}
+                        </th>
+                        <th onClick={() => requestSort('startTime')}>
+                            Date de Début {sortConfig.key === 'startTime' && (
+                            <i className={`fas fa-arrow-${sortConfig.direction === 'asc' ? 'up' : 'down'}`} />
+                        )}
+                        </th>
+                        <th onClick={() => requestSort('endTime')}>
+                            Date de Fin {sortConfig.key === 'endTime' && (
+                            <i className={`fas fa-arrow-${sortConfig.direction === 'asc' ? 'up' : 'down'}`} />
+                        )}
+                        </th>
                         <th>Durée</th>
                         <th>Actions</th>
                     </tr>

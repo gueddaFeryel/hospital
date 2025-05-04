@@ -1,8 +1,4 @@
 package com.example.dashboard_service.Controller;
-
-
-
-
 import com.example.dashboard_service.Repository.InterventionRepository;
 import com.example.dashboard_service.Repository.MaterielRepository;
 import com.example.dashboard_service.Service.EmailService;
@@ -23,10 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -185,22 +178,9 @@ public class InterventionController {
     @PostMapping("/{id}/assign-materiel")
     public ResponseEntity<?> assignMaterielToIntervention(
             @PathVariable Long id,
-            @RequestBody List<MaterielAssignmentDTO> assignments) {
+            @RequestBody Set<Long> materielIds) {
         try {
-            // Validation des données
-            if (assignments == null || assignments.isEmpty()) {
-                return ResponseEntity.badRequest().body("La liste des matériels ne peut pas être vide");
-            }
-
-            for (MaterielAssignmentDTO assignment : assignments) {
-                if (assignment.getQuantity() == null || assignment.getQuantity() <= 0) {
-                    return ResponseEntity.badRequest().body("La quantité doit être supérieure à 0");
-                }
-            }
-
-            InterventionChirurgicale intervention = interventionService
-                    .assignerMaterielAvecQuantite(id, assignments);
-
+            InterventionChirurgicale intervention = interventionService.assignerMateriel(id, materielIds);
             return ResponseEntity.ok(intervention);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
@@ -405,20 +385,28 @@ public class InterventionController {
             log.error("Échec de l'enregistrement pour réessai: {}", e.getMessage());
         }
     }
+
+
+    @GetMapping("/check-conflict")
+    public ResponseEntity<Map<String, Boolean>> checkInterventionConflict(
+            @RequestParam Long roomId,
+            @RequestParam String startTime,
+            @RequestParam String endTime,
+            @RequestParam(required = false) Long interventionId) {
+
+        LocalDateTime start = LocalDateTime.parse(startTime);
+        LocalDateTime end = LocalDateTime.parse(endTime);
+
+        boolean hasConflict = interventionRepository.existsByRoomIdAndTimeRange(
+                roomId,
+                start,
+                end,
+                interventionId
+        );
+
+        return ResponseEntity.ok(Collections.singletonMap("hasConflict", hasConflict));
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
