@@ -1,0 +1,165 @@
+/* App.css */
+:root {
+  --sidebar-width: 250px;
+  --primary-color: #3498db;
+  --primary-dark: #2980b9;
+  --text-color: #3498db;
+  --bg-color: #2c3e50;
+  --hover-color: rgba(255, 255, 255, 0.1);
+  --active-color: rgba(255, 255, 255, 0.2);
+  --transition-speed: 0.3s;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: linear-gradient(135deg, var(--bg-color), #1a252f);
+  color: var(--text-color);
+  height: 100vh;
+  position: fixed;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: all var(--transition-speed) ease;
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #fff, #ddd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  flex-grow: 1;
+}
+
+.nav-item {
+  margin: 5px 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all var(--transition-speed) ease;
+}
+
+.nav-item:hover {
+  background: var(--hover-color);
+}
+
+.nav-item.active {
+  background: var(--active-color);
+  position: relative;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--primary-color);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all var(--transition-speed) ease;
+}
+
+.nav-icon {
+  width: 24px;
+  text-align: center;
+  margin-right: 15px;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.nav-text {
+  flex-grow: 1;
+}
+
+.sidebar-footer {
+  padding: 15px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.hospital-name {
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.app-main {
+  flex-grow: 1;
+  margin-left: var(--sidebar-width);
+  padding: 20px;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+/* Effet HD et ombres */
+.sidebar {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.nav-item {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation au survol */
+.nav-link:hover .nav-icon {
+  transform: scale(1.1);
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+    overflow: hidden;
+  }
+
+  .sidebar:hover {
+    width: var(--sidebar-width);
+  }
+
+  .nav-text {
+    display: none;
+  }
+
+  .sidebar:hover .nav-text {
+    display: inline;
+  }
+
+  .app-main {
+    margin-left: 70px;
+  }
+
+  .sidebar:hover ~ .app-main {
+    margin-left: var(--sidebar-width);
+  }
+}

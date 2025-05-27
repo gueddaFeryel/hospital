@@ -1,0 +1,514 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container */
+.intervention-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* Header */
+.header-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header {
+    font-size: 2.5rem;
+    color: #1a3c6d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+/* Stats Container */
+.stats-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.stats-container h3 {
+    font-size: 1.8rem;
+    color: #1a3c6d;
+    margin-bottom: 1.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.chart-container {
+    padding: 1rem;
+    background: #f9fafc;
+    border-radius: 8px;
+}
+
+.chart-container h4 {
+    font-size: 1.2rem;
+    color: #2c5282;
+    margin-bottom: 1rem;
+}
+
+/* Today Interventions */
+.today-interventions {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.today-interventions h3 {
+    font-size: 1.8rem;
+    color: #1a3c6d;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.today-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .today-cards {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+.today-card {
+    background: #e6f0fa;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.today-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.today-card.upcoming {
+    border-left: 4px solid #48bb78;
+}
+
+.today-card.in-progress {
+    border-left: 4px solid #ed8936;
+}
+
+.today-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.intervention-time {
+    font-size: 1rem;
+    color: #4a5568;
+}
+
+.status-badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+.status-planifiee {
+    background: #68d391;
+    color: #fff;
+}
+
+.status-en_cours {
+    background: #ed8936;
+    color: #fff;
+}
+
+.status-terminee {
+    background: #a0aec0;
+    color: #fff;
+}
+
+.status-annulee {
+    background: #f56565;
+    color: #fff;
+}
+
+.today-card-body h4 {
+    font-size: 1.1rem;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.today-card-body p {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.time-status {
+    font-size: 0.85rem;
+    color: #4a5568;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.btn-action {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.details-btn {
+    background: #2b6cb0;
+    color: #fff;
+}
+
+.details-btn:hover {
+    background: #2c5282;
+}
+
+/* Calendar Controls */
+.calendar-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.nav-button {
+    background: #edf2f7;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nav-button:hover {
+    background: #e2e8f0;
+}
+
+.month-title {
+    font-size: 1.6rem;
+    color: #1a3c6d;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-day-header {
+    font-size: 1rem;
+    color: #4a5568;
+    text-align: center;
+    padding: 0.5rem;
+    font-weight: 500;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.calendar-day:hover {
+    background: #e6f0fa;
+}
+
+.day-number {
+    font-size: 1rem;
+    color: #2d3748;
+}
+
+.other-month .day-number {
+    color: #a0aec0;
+}
+
+.today-day {
+    background: #bee3f8;
+    font-weight: bold;
+}
+
+.today-marker {
+    font-size: 0.7rem;
+    color: #2b6cb0;
+    margin-top: 0.2rem;
+}
+
+.selected-day {
+    background: #2b6cb0;
+    color: #fff;
+}
+
+.selected-day .day-number,
+.selected-day .today-marker {
+    color: #fff;
+}
+
+.intervention-indicator {
+    font-size: 0.8rem;
+    color: #fff;
+    background: #e53e3e;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.3rem;
+}
+
+/* Interventions List */
+.interventions-list {
+    margin-top: 2rem;
+}
+
+.interventions-list h3 {
+    font-size: 1.8rem;
+    color: #1a3c6d;
+    margin-bottom: 1.5rem;
+}
+
+.intervention-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .intervention-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+.intervention-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.intervention-card:hover {
+    transform: translateY(-5px);
+}
+
+.intervention-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.intervention-card-body h4 {
+    font-size: 1.1rem;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.intervention-card-body p {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.intervention-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.cancel-btn {
+    background: #f56565;
+    color: #fff;
+}
+
+.cancel-btn:hover {
+    background: #c53030;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #718096;
+}
+
+.modal-close-button:hover {
+    color: #2d3748;
+}
+
+.modal-content h3 {
+    font-size: 1.8rem;
+    color: #1a3c6d;
+    margin-bottom: 1.5rem;
+}
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.details-header h4 {
+    font-size: 1.4rem;
+    color: #2d3748;
+}
+
+.details-body p {
+    font-size: 1rem;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.details-body strong {
+    color: #2d3748;
+}
+
+.details-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #718096;
+}
+
+.spinner {
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #2b6cb0;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .header {
+        font-size: 2rem;
+    }
+
+    .stats-container h3,
+    .today-interventions h3,
+    .interventions-list h3 {
+        font-size: 1.5rem;
+    }
+
+    .calendar-controls {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+    }
+}

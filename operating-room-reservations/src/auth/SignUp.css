@@ -1,0 +1,172 @@
+/* Base container styling with a subtle gradient background */
+.signup-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #e0f2fe 0%, #f3f4f6 100%); /* Soft blue-to-gray gradient */
+}
+
+/* Square-shaped signup card with HD shadow and slight gradient */
+.signup-card {
+    max-width: 450px; /* Consistent with Login page */
+    width: 100%;
+    padding: 2rem;
+    border-radius: 8px; /* Sharper corners for square look */
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%); /* Subtle white gradient */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Deeper, HD shadow */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for polish */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signup-card:hover {
+    transform: translateY(-4px); /* Lift effect on hover */
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Header styling with vibrant text */
+.signup-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.signup-header h2 {
+    font-size: 1.75rem; /* Slightly larger for emphasis */
+    font-weight: 700;
+    color: #1e3a8a; /* Deep blue for professional feel */
+    background: linear-gradient(to right, #1e3a8a, #3b82f6); /* Gradient text */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.signup-header p {
+    color: #4b5563; /* Softer gray for subtitle */
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+/* Form group styling with smooth input effects */
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #1f2937; /* Dark gray for readability */
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease-out;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #bfdbfe; /* Light blue border */
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #1e3a8a; /* Deep blue text */
+    background-color: #f8fafc; /* Light background for inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3b82f6; /* Vibrant blue on focus */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Glow effect */
+    transform: scale(1.01); /* Subtle scale for HD feel */
+}
+
+/* Floating label effect */
+.form-group input:not(:placeholder-shown) + label,
+.form-group input:focus + label,
+.form-group select:focus + label {
+    transform: translateY(-2.2rem) translateX(0.5rem) scale(0.85);
+    color: #3b82f6; /* Blue for active labels */
+    background: #ffffff;
+    padding: 0 0.25rem;
+}
+
+/* Error message with gradient border */
+.error-message {
+    background: linear-gradient(145deg, #fef2f2 0%, #fee2e2 100%); /* Soft red gradient */
+    color: #b91c1c; /* Dark red text */
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    border: 1px solid #f87171; /* Red border */
+    box-shadow: 0 2px 8px rgba(248, 113, 113, 0.2); /* Subtle shadow */
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Button with gradient and HD hover effect */
+button[type="submit"] {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%); /* Blue gradient */
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); /* Soft glow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background: linear-gradient(90deg, #2563eb 0%, #1e3a8a 100%); /* Darker gradient on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5); /* Enhanced glow */
+}
+
+button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Footer with subtle link hover effect */
+.signup-footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.signup-footer a {
+    color: #3b82f6; /* Blue link */
+    font-weight: 500;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease-out;
+}
+
+.signup-footer a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #3b82f6;
+    transition: width 0.3s ease;
+}
+
+.signup-footer a:hover::after {
+    width: 100%;
+}
+
+.signup-footer a:hover {
+    color: #1d4ed8; /* Darker blue on hover */
+}

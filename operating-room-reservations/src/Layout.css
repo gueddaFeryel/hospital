@@ -1,0 +1,23 @@
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden; /* Empêche le défilement horizontal */
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    width: calc(100% - 250px); /* Ajustez selon la largeur de votre sidebar */
+    margin-left: 250px; /* Doit correspondre à la largeur de votre sidebar */
+    box-sizing: border-box; /* Inclut padding dans le calcul de la largeur */
+}
+
+/* Pour les petits écrans */
+@media (max-width: 768px) {
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+    }
+}

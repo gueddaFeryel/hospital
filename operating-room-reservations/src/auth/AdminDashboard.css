@@ -1,0 +1,318 @@
+/* AdminDashboard.css */
+
+.admin-dashboard-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a1a;
+}
+
+/* Glass effect header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.header-content h2 {
+    color: #2a2d7c;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #6e45e2 0%, #89d4cf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Search bar with glass effect */
+.search-container {
+    position: relative;
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6e45e2;
+    z-index: 2;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    transition: all 0.3s;
+    border: 1px solid rgba(110, 69, 226, 0.1);
+}
+
+.search-bar:focus {
+    outline: none;
+    box-shadow: 0 5px 25px rgba(110, 69, 226, 0.15);
+    border-color: rgba(110, 69, 226, 0.3);
+}
+
+/* Users table with glass effect */
+.users-table-wrapper {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    padding: 1.5rem;
+}
+
+.users-table-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #6e45e2, #89d4cf, #6e45e2);
+    background-size: 200% 200%;
+    z-index: -1;
+    border-radius: 22px;
+    animation: gradientBG 6s ease infinite;
+    opacity: 0.1;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.users-table th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, rgba(110, 69, 226, 0.1) 0%, rgba(137, 212, 207, 0.1) 100%);
+    color: #2a2d7c;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.users-table td {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    vertical-align: middle;
+}
+
+.users-table tr:last-child td {
+    border-bottom: none;
+}
+
+.users-table tr {
+    transition: all 0.3s;
+    animation: fadeIn 0.5s ease forwards;
+    opacity: 0;
+}
+
+.users-table tr:hover {
+    background: rgba(110, 69, 226, 0.03);
+}
+
+/* Role badges */
+.role-badge {
+    display: inline-block;
+    padding: 0.35rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.role-badge.doctor {
+    background: rgba(74, 144, 226, 0.1);
+    color: #4a90e2;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.role-badge.nurse {
+    background: rgba(110, 69, 226, 0.1);
+    color: #6e45e2;
+    border: 1px solid rgba(110, 69, 226, 0.2);
+}
+
+.role-badge.admin {
+    background: rgba(226, 69, 159, 0.1);
+    color: #e2459f;
+    border: 1px solid rgba(226, 69, 159, 0.2);
+}
+
+.role-badge.staff {
+    background: rgba(69, 226, 168, 0.1);
+    color: #45e2a8;
+    border: 1px solid rgba(69, 226, 168, 0.2);
+}
+
+/* Approve button with gradient effect */
+.approve-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    background: #6e45e2;
+    color: white;
+    box-shadow: 0 4px 15px rgba(110, 69, 226, 0.2);
+}
+
+.approve-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #6e45e2, #89d4cf, #6e45e2);
+    background-size: 200% 200%;
+    z-index: -1;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.approve-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(110, 69, 226, 0.3);
+}
+
+.approve-btn:hover::before {
+    opacity: 1;
+    animation: gradientBG 3s ease infinite;
+}
+
+.approve-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.approve-btn.approved {
+    background: #4CAF50;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+}
+
+.approve-btn.approved:hover::before {
+    opacity: 0;
+}
+
+.approve-btn.failed {
+    background: #ff4757;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.2);
+}
+
+.approve-btn.failed:hover::before {
+    opacity: 0;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(110, 69, 226, 0.1);
+    border-radius: 50%;
+    border-top-color: #6e45e2;
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-dashboard-container {
+        padding: 0 1rem;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .users-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .approve-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .users-table th,
+    .users-table td {
+        padding: 0.8rem;
+    }
+
+    .role-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+}

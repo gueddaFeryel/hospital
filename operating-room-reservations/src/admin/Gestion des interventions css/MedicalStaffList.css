@@ -1,0 +1,453 @@
+/* MedicalStaffList.css */
+.medical-staff-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+/* En-tête avec effet verre amélioré */
+.medical-staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.medical-staff-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+            45deg,
+            rgba(110, 69, 226, 0.1) 0%,
+            rgba(137, 212, 207, 0.1) 50%,
+            rgba(110, 69, 226, 0.1) 100%
+    );
+    transform: rotate(45deg);
+    z-index: 0;
+    animation: gradientFlow 15s ease infinite;
+    background-size: 200% 200%;
+}
+
+.medical-staff-title {
+    color: #2a2d7c;
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(90deg, #6e45e2 0%, #89d4cf 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    z-index: 1;
+}
+
+.staff-count {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+}
+
+/* Bouton retour amélioré */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.9);
+    color: #6e45e2;
+    border: 2px solid rgba(224, 231, 255, 0.7);
+    box-shadow: 0 4px 20px rgba(110, 69, 226, 0.1);
+}
+
+.btn-back:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(110, 69, 226, 0.2);
+    background: rgba(248, 250, 255, 0.95);
+}
+
+.btn-back::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+    z-index: -1;
+}
+
+.btn-back:hover::after {
+    transform: translateX(100%);
+}
+
+/* Barre de recherche premium */
+.search-container {
+    position: relative;
+    min-width: 90px;
+    z-index: 1;
+}
+
+.search-input {
+    width: 70%;
+    padding: 0.85rem 1.2rem 0.85rem 3.5rem;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.4s;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    color: #2b2d42;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: rgba(110, 69, 226, 0.5);
+    box-shadow: 0 0 0 3px rgba(110, 69, 226, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6e45e2;
+    font-size: 1.1rem;
+}
+
+/* Tableau avec effets premium */
+.table-container {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    position: relative;
+}
+
+.table-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, rgba(110, 69, 226, 0.1), rgba(137, 212, 207, 0.1), rgba(110, 69, 226, 0.1));
+    background-size: 200% 200%;
+    z-index: -1;
+    border-radius: 22px;
+    animation: gradientBG 8s ease infinite;
+    opacity: 0.5;
+}
+
+.medical-staff-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    position: relative;
+}
+
+.medical-staff-table thead {
+    background: linear-gradient(135deg, #6e45e2 0%, #89d4cf 100%);
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.medical-staff-table th {
+    padding: 1.3rem 1.8rem;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 1.05rem;
+}
+
+.medical-staff-table tbody tr {
+    transition: all 0.35s ease;
+    animation: fadeIn 0.6s ease forwards;
+    opacity: 0;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.medical-staff-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.medical-staff-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.medical-staff-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+
+.medical-staff-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid rgba(224, 224, 224, 0.4);
+}
+
+.medical-staff-table tbody tr:hover {
+    background: rgba(248, 249, 255, 0.85);
+    transform: translateX(6px);
+    box-shadow: 0 5px 20px rgba(110, 69, 226, 0.08);
+}
+
+.medical-staff-table td {
+    padding: 1.3rem 1.8rem;
+    color: #2b2d42;
+    font-weight: 500;
+    font-size: 0.98rem;
+    position: relative;
+}
+
+/* Badges de rôle améliorés */
+.role-badge {
+    padding: 0.45rem 1.1rem;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.role-medecin {
+    background: rgba(110, 69, 226, 0.12);
+    color: #6e45e2;
+    border: 1px solid rgba(110, 69, 226, 0.2);
+}
+
+.role-infirmier {
+    background: rgba(137, 212, 207, 0.12);
+    color: #2a9d8f;
+    border: 1px solid rgba(137, 212, 207, 0.2);
+}
+
+.role-anesthésiste {
+    background: rgba(239, 71, 111, 0.12);
+    color: #ef476f;
+    border: 1px solid rgba(239, 71, 111, 0.2);
+}
+
+/* Boutons d'action premium */
+.action-cell {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.edit-btn, .delete-btn {
+    padding: 0.75rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.edit-btn::before, .delete-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+}
+
+.edit-btn:hover::before, .delete-btn:hover::before {
+    transform: translateX(100%);
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, rgba(110, 69, 226, 0.1), rgba(137, 212, 207, 0.1));
+    color: #6e45e2;
+    border: 1px solid rgba(110, 69, 226, 0.2);
+    text-decoration: none;
+}
+
+.edit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(110, 69, 226, 0.15);
+    background: linear-gradient(135deg, rgba(110, 69, 226, 0.15), rgba(137, 212, 207, 0.15));
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, rgba(239, 71, 111, 0.1), rgba(255, 107, 107, 0.1));
+    color: #ef476f;
+    border: 1px solid rgba(239, 71, 111, 0.2);
+}
+
+.delete-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(239, 71, 111, 0.15);
+    background: linear-gradient(135deg, rgba(239, 71, 111, 0.15), rgba(255, 107, 107, 0.15));
+}
+
+/* État vide amélioré */
+.no-results {
+    padding: 3rem;
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    background: rgba(248, 250, 252, 0.8);
+    border-radius: 12px;
+    font-size: 1.1rem;
+    margin: 1rem;
+}
+
+/* Loading spinner premium */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    gap: 1.5rem;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(240, 240, 240, 0.8);
+    border-top: 5px solid #6e45e2;
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+    box-shadow: 0 4px 15px rgba(110, 69, 226, 0.2);
+}
+
+.loading-container p {
+    font-size: 1.2rem;
+    color: #6e45e2;
+    font-weight: 500;
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Responsive amélioré */
+@media (max-width: 1200px) {
+    .medical-staff-container {
+        padding: 0 1.5rem;
+    }
+
+    .medical-staff-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .search-container {
+        min-width: 100%;
+    }
+
+    .btn-back {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .medical-staff-title {
+        font-size: 2rem;
+    }
+
+    .medical-staff-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .action-cell {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .edit-btn, .delete-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.8rem;
+    }
+
+    .medical-staff-table th,
+    .medical-staff-table td {
+        padding: 1.2rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .medical-staff-container {
+        padding: 0 1rem;
+    }
+
+    .medical-staff-title {
+        font-size: 1.8rem;
+    }
+
+    .medical-staff-table th,
+    .medical-staff-table td {
+        padding: 1rem;
+    }
+
+    .role-badge {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.8rem;
+    }
+}

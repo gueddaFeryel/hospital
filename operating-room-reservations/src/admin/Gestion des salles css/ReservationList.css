@@ -1,0 +1,330 @@
+/* Gestion des salles css/ReservationList.css */
+
+/* Base Styles */
+.reservation-list-container {
+    font-family: 'Poppins', sans-serif;
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    color: #555db5;
+}
+
+/* Header Styles */
+.reservation-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.header-content h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: #2b2d42;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.header-content h1 i {
+    color: #4361ee;
+}
+
+.header-content p {
+    margin: 0.5rem 0 0;
+    color: #64748b;
+    font-size: 1rem;
+}
+
+/* Search and Actions */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.search-box {
+    position: relative;
+    flex-grow: 1;
+    max-width: 400px;
+    min-width: 250px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+/* Buttons */
+.btn-back {
+    padding: 0.7rem 1.3rem;
+    background: #f1f5f9;
+    color: #334155;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    align-self: flex-start;
+}
+
+.btn-back:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+.add-button {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+    border-radius: 50px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+.add-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(58, 12, 163, 0.2);
+}
+
+/* Table Styles */
+.reservation-table-container {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-top: 1.5rem;
+}
+
+.reservation-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.reservation-table thead {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+}
+
+.reservation-table th {
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.reservation-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.reservation-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.reservation-table tbody tr:hover {
+    background-color: #f8f9ff;
+}
+
+.reservation-table td {
+    padding: 1.3rem 1.5rem;
+    color: #4a4a4a;
+    font-weight: 400;
+}
+
+/* Room Info */
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.room-info i {
+    color: #4361ee;
+    font-size: 1.1rem;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.edit-button, .delete-button {
+    padding: 0.6rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.edit-button {
+    background: linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%);
+    color: white;
+}
+
+.edit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 201, 240, 0.3);
+}
+
+.delete-button {
+    background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+    color: white;
+}
+
+.delete-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(247, 37, 133, 0.3);
+}
+
+/* No Results */
+.no-results td {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+}
+
+.no-results i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #94a3b8;
+    display: block;
+}
+
+/* Loading and Error States */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    gap: 1rem;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f0f0f0;
+    border-top: 4px solid #4361ee;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.error-container {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.error-alert {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    max-width: 600px;
+}
+
+.error-alert i {
+    font-size: 1.2rem;
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .reservation-list-container {
+        padding: 0 1rem;
+    }
+
+    .header-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .reservation-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .edit-button, .delete-button {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-actions {
+        flex-direction: column;
+    }
+
+    .search-box {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .add-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .reservation-table th,
+    .reservation-table td {
+        padding: 1rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}

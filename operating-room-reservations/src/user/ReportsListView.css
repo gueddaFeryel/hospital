@@ -1,0 +1,301 @@
+.reports-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+.reports-header {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title-section {
+    display: flex;
+    align-items: center;
+}
+
+.header-icon {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.reports-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: #333;
+}
+
+.subtitle {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.refresh-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.refresh-btn:hover {
+    background: #0056b3;
+}
+
+.refresh-btn span {
+    margin-left: 5px;
+}
+
+.reports-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reports-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.reports-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reports-table th,
+.reports-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.reports-table th {
+    background: #f1f3f5;
+    font-weight: bold;
+    color: #333;
+}
+
+.reports-table th.highlight,
+.reports-table td.highlight {
+    background: #e6f3ff;
+    font-weight: bold;
+}
+
+.reports-table tr:hover {
+    background: #f8f9fa;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: white;
+}
+
+.status-brouillon {
+    background: #ffc107;
+}
+
+.status-soumis {
+    background: #28a745;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #007bff;
+}
+
+.action-btn.edit:hover {
+    color: #0056b3;
+}
+
+.action-btn.view {
+    color: #6c757d;
+}
+
+.action-btn:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.no-reports {
+    text-align: center;
+    padding: 40px;
+}
+
+.no-reports img {
+    max-width: 200px;
+    margin-bottom: 20px;
+}
+
+.no-reports h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.no-reports p {
+    color: #666;
+}
+
+.loading-container,
+.error-container {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-alert {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.retry-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.retry-btn:hover {
+    background: #c82333;
+}
+
+.rapport-form-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+}
+
+.modal-header h2 {
+    display: flex;
+    align-items: center;
+    margin: 0 0 20px;
+}
+
+.modal-header h2 svg {
+    margin-right: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.form-group textarea:disabled {
+    background: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-save-rapport {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.btn-save-rapport:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.btn-save-rapport svg {
+    margin-right: 5px;
+}
+
+.btn-cancel-rapport {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
